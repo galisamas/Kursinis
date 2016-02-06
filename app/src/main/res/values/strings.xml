@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Kursinis</string>
     <string name="action_settings">Settings</string>
+    <string name="lankomumasText">Lankomumas</string>
+    <string name="klausimasText">klausimas</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="formLabel">Forma</string>
 </resources>
