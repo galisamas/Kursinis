@@ -11,6 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
 
 public class MainActivityFragment extends Fragment implements View.OnClickListener{
 
@@ -31,9 +36,15 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-//        openFormActivity("labas");
-        if (v.getId() == R.id.lankomumas)
+        if (v.getId() == R.id.lankomumas && checkUniqueCode())
             scanQR();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK)
+            openFormActivity(data.getStringExtra("SCAN_RESULT"));
     }
 
     private void scanQR() {
@@ -48,16 +59,26 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0 && resultCode == Activity.RESULT_OK)
-            openFormActivity(data.getStringExtra("SCAN_RESULT"));
-    }
-
     private void openFormActivity(String contents) {
         Intent intent = new Intent(getActivity(), FormActivity.class);
         intent.putExtra(Constants.qr_result, contents);
         startActivity(intent);
     }
+    private final String uniqueCode = "uniqueCode"; // TODO sutvarkyti values
+
+    private boolean checkUniqueCode(){
+        String uniqueC = UniqueCodeGenerator.generate(getActivity());
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Lankomumas");
+        query.whereEqualTo(uniqueCode, uniqueC);
+        try {
+            Log.d("UNIQUE", uniqueC);
+            query.getFirst();
+            return false;
+        } catch (ParseException e) {
+            return true;
+        }
+    }
+
+
 }

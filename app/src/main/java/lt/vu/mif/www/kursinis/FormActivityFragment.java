@@ -15,8 +15,7 @@ import com.parse.ParseObject;
 
 public class FormActivityFragment extends Fragment implements View.OnClickListener{
 
-
-    private final String uniqueC = "uniqueC";
+    private final String uniqueC = "uniqueCode";
     private final String location = "location";
     private final String qRcode = "QRcode";
     private final String snumber = "snumber";
@@ -38,7 +37,7 @@ public class FormActivityFragment extends Fragment implements View.OnClickListen
     }
 
     public void executeButton(){
-        ParseObject testObject = new ParseObject("Lankomumas");
+        ParseObject testObject = new ParseObject("Lankomumas"); // TODO iskelt
         testObject.put(uniqueC, "bar");
         testObject.put(location, "bar"); // TODO add location
         testObject.put(qRcode, getActivity().getIntent().getStringExtra(Constants.qr_result));

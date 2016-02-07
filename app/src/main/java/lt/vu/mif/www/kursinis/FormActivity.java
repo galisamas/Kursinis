@@ -22,6 +22,7 @@ public class FormActivity extends AppCompatActivity{
         Fragment fragment = new FormActivityFragment();
 //        fragment.setArguments(extras);
 
+
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment, fragment).commit();
 
