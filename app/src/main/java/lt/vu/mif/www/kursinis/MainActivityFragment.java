@@ -1,7 +1,10 @@
 package lt.vu.mif.www.kursinis;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -32,16 +35,16 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         return v;
     }
 
-
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.lankomumas)
+        if (v.getId() == R.id.lankomumas && isNetworkAvailable())
             if (checkUniqueCode()) {
                 scanQR();
-            } else
+            } else {
                 Snackbar.make(v, getString(R.string.alreadyInClass), Snackbar.LENGTH_LONG).show();
-
-
+            }
+        else
+            Snackbar.make(v, getString(R.string.internetConn), Snackbar.LENGTH_LONG).show();
     }
 
     @Override
@@ -71,7 +74,6 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
 
     private boolean checkUniqueCode(){
         String uniqueC = UniqueCodeGenerator.generate(getActivity());
-
         ParseQuery<ParseObject> query = ParseQuery.getQuery(Constants.table_name);
         query.whereEqualTo(Constants.unique_code, uniqueC);
         try {
@@ -80,5 +82,12 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         } catch (ParseException e) {
             return true;
         }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

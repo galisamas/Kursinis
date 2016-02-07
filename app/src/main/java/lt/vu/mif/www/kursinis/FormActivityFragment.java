@@ -1,5 +1,6 @@
 package lt.vu.mif.www.kursinis;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -10,9 +11,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.parse.ParseObject;
 
-public class FormActivityFragment extends Fragment implements View.OnClickListener{
+public class FormActivityFragment extends Fragment implements View.OnClickListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private final String location = "location";
     private final String qRcode = "QRcode";
@@ -22,6 +27,9 @@ public class FormActivityFragment extends Fragment implements View.OnClickListen
 
     EditText nrText, nameText, surnameText;
     Button execButton;
+
+    GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
 
     public FormActivityFragment() {
     }
@@ -37,7 +45,57 @@ public class FormActivityFragment extends Fragment implements View.OnClickListen
         return v;
     }
 
-    public void executeButton(){
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(!nrText.getText().toString().matches(""))
+            executeButton();
+        else
+            Snackbar.make(v, getString(R.string.noStudentNrText), Snackbar.LENGTH_LONG).show();
+    }
+
+    public void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
+    public void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
+
+    @Override
+    public void onConnected(Bundle connectionHint) { // TODO spinduliu kazkokiu
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        if (mLastLocation != null) {
+//            mLatitudeText.setText(String.valueOf(mLastLocation.getLatitude()));
+//            mLongitudeText.setText(String.valueOf(mLastLocation.getLongitude()));
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    private void executeButton(){
         ParseObject parseObject = new ParseObject(Constants.table_name);
         parseObject.put(Constants.unique_code, UniqueCodeGenerator.generate(getActivity()));
         parseObject.put(location, "bar"); // TODO add location
@@ -48,13 +106,5 @@ public class FormActivityFragment extends Fragment implements View.OnClickListen
         parseObject.saveInBackground();
         Toast.makeText(getActivity(), getString(R.string.afterLogin), Toast.LENGTH_LONG).show();
         getActivity().finish();
-    }
-
-    @Override
-    public void onClick(View v) {
-        if(!nrText.getText().toString().matches(""))
-            executeButton();
-        else
-            Snackbar.make(v, getString(R.string.noStudentNrText), Snackbar.LENGTH_LONG).show();
     }
 }
