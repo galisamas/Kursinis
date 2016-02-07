@@ -12,7 +12,7 @@ public class UniqueCodeGenerator {
     public static String generate(Activity ac){
         String tmDevice, tmSerial, androidId;
 
-        final TelephonyManager tm = (TelephonyManager) ac.getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
+        TelephonyManager tm = (TelephonyManager) ac.getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
 
         tmDevice = "" + tm.getDeviceId();
         tmSerial = "" + tm.getSimSerialNumber();

@@ -3,15 +3,14 @@ package lt.vu.mif.www.kursinis;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -36,8 +35,13 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.lankomumas && checkUniqueCode())
-            scanQR();
+        if (v.getId() == R.id.lankomumas)
+            if (checkUniqueCode()) {
+                scanQR();
+            } else
+                Snackbar.make(v, getString(R.string.alreadyInClass), Snackbar.LENGTH_LONG).show();
+
+
     }
 
     @Override
@@ -64,21 +68,17 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         intent.putExtra(Constants.qr_result, contents);
         startActivity(intent);
     }
-    private final String uniqueCode = "uniqueCode"; // TODO sutvarkyti values
 
     private boolean checkUniqueCode(){
         String uniqueC = UniqueCodeGenerator.generate(getActivity());
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Lankomumas");
-        query.whereEqualTo(uniqueCode, uniqueC);
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(Constants.table_name);
+        query.whereEqualTo(Constants.unique_code, uniqueC);
         try {
-            Log.d("UNIQUE", uniqueC);
             query.getFirst();
             return false;
         } catch (ParseException e) {
             return true;
         }
     }
-
-
 }

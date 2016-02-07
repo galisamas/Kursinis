@@ -12,4 +12,6 @@
     <string name="Name">Vardas</string>
     <string name="StudNumber">Studento numeris</string>
     <string name="noStudentNrText">Prašome įrašyti studento numerį</string>
+    <string name="alreadyInClass">Jūs jau užsiregistravęs.</string>
+    <string name="afterLogin">Jūs sėkmingai užregistruotas</string>
 </resources>
