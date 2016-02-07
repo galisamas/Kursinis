@@ -11,4 +11,5 @@
     <string name="Surname">Pavardė</string>
     <string name="Name">Vardas</string>
     <string name="StudNumber">Studento numeris</string>
+    <string name="noStudentNrText">Prašome įrašyti studento numerį</string>
 </resources>

@@ -31,9 +31,9 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        openFormActivity("labas");
-//        if (v.getId() == R.id.lankomumas)
-//            scanQR();
+//        openFormActivity("labas");
+        if (v.getId() == R.id.lankomumas)
+            scanQR();
     }
 
     private void scanQR() {
