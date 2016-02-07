@@ -10,5 +10,44 @@
     tools:context="lt.vu.mif.www.kursinis.FormActivityFragment"
     tools:showIn="@layout/form_activity">
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="phone"
+        android:ems="10"
+        android:id="@+id/nrText"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
+        android:hint="@string/StudNumber" />
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="@string/Name"
+        android:ems="10"
+        android:id="@+id/nameText"
+        android:layout_below="@+id/nrText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="@string/Surname"
+        android:ems="10"
+        android:id="@+id/surnameText"
+        android:layout_below="@+id/nameText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pasizymPask"
+        android:id="@+id/execButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

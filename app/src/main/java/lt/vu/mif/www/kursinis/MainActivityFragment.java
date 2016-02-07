@@ -10,11 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
+
 
 public class MainActivityFragment extends Fragment implements View.OnClickListener{
 
-    private final String qr_result = "QR_RESULT";
     Button lank, klaus;
 
     public MainActivityFragment() {
@@ -32,9 +31,9 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.lankomumas){
-            scanQR();
-        }
+        openFormActivity("labas");
+//        if (v.getId() == R.id.lankomumas)
+//            scanQR();
     }
 
     private void scanQR() {
@@ -52,16 +51,13 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0) {
-            if (resultCode == Activity.RESULT_OK) {
-                openFormActivity(data.getStringExtra("SCAN_RESULT"));
-            }
-        }
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK)
+            openFormActivity(data.getStringExtra("SCAN_RESULT"));
     }
 
     private void openFormActivity(String contents) {
         Intent intent = new Intent(getActivity(), FormActivity.class);
-        intent.putExtra(qr_result, contents);
+        intent.putExtra(Constants.qr_result, contents);
         startActivity(intent);
     }
 }
