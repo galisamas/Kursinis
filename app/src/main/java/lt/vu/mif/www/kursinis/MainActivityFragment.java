@@ -37,6 +37,7 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
+//        openFormActivity("dada");
         if (v.getId() == R.id.lankomumas && isNetworkAvailable())
             if (checkUniqueCode()) {
                 scanQR();
@@ -57,7 +58,7 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
     private void scanQR() {
         try {
             Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-            intent.putExtra("SCAN_MODE", "QR_CODE_MODE"); // "PRODUCT_MODE for bar codes
+            intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
             startActivityForResult(intent, 0);
         } catch (Exception e) {
             Uri marketUri = Uri.parse("market://details?id=com.google.zxing.client.android");
