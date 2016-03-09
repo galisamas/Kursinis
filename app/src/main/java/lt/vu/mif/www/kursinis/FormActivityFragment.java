@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class FormActivityFragment extends Fragment implements View.OnClickListener,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener { // TODO istrinti komentus
 
     private final String location = "location";
     private final String qRcode = "QRcode";
@@ -40,7 +40,7 @@ public class FormActivityFragment extends Fragment implements View.OnClickListen
     private Location mLastLocation;
     private double latitude;
     private double longitude;
-    private String address;
+    private String address = "";
 
     public FormActivityFragment() {
     }
@@ -59,6 +59,10 @@ public class FormActivityFragment extends Fragment implements View.OnClickListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        createGAC();
+    }
+
+    private void createGAC() {
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                     .addConnectionCallbacks(this)
@@ -85,9 +89,12 @@ public class FormActivityFragment extends Fragment implements View.OnClickListen
     @Override
     public void onConnected(Bundle connectionHint) { // TODO veikia tik is antro karto prisijungus
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                    mGoogleApiClient);
+            while (mLastLocation == null) {
+                mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                        mGoogleApiClient);
+            }
             Log.d("CONNECTION", "ON CONNECTED -> " + (mLastLocation == null));
+
             if (mLastLocation != null) {
                 latitude = mLastLocation.getLatitude();
                 longitude = mLastLocation.getLongitude();
