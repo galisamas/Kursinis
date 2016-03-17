@@ -81,6 +81,7 @@ public class FormActivityFragment extends Fragment implements View.OnClickListen
             Snackbar.make(v, getString(R.string.noStudentNrText), Snackbar.LENGTH_LONG).show();
     }
 
+    @Override
     public void onStop() {
         mGoogleApiClient.disconnect();
         super.onStop();

@@ -9,17 +9,21 @@ import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.internal.widget.AdapterViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 
-public class MainActivityFragment extends Fragment implements View.OnClickListener{
+public class MainActivityFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     Button lank, klaus;
 
@@ -31,14 +35,27 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
         lank = (Button) v.findViewById(R.id.lankomumas);
+        klaus = (Button) v.findViewById(R.id.klausimas);
         lank.setOnClickListener(this);
+        klaus.setOnClickListener(this);
+        Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.lectures_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setOnItemSelectedListener(this);
+        spinner.setAdapter(adapter);
         return v;
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View v) { // TODO: kalusimui: https://parse.com/questions/updating-a-field-without-retrieving-the-object-first
+        // TODO Timer for callbacks: http://stackoverflow.com/questions/6439903/android-messaging-between-thread-in-a-class-and-activty
 //        openFormActivity("dada");
-        if (v.getId() == R.id.lankomumas && isNetworkAvailable())
+        if( v.getId() == R.id.klausimas && isNetworkAvailable()){
+            Intent intent = new Intent(getActivity(), QuestionActivity.class);
+            startActivity(intent);
+        }
+        else if (v.getId() == R.id.lankomumas && isNetworkAvailable())
             if (checkUniqueCode()) {
                 scanQR();
             } else {
@@ -90,5 +107,16 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
                 = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

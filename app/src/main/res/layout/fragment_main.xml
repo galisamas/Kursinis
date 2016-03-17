@@ -9,12 +9,14 @@
     tools:context="lt.vu.mif.www.kursinis.MainActivityFragment"
     tools:showIn="@layout/activity_main">
 
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/lankomumasText"
         android:layout_centerInParent="true"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:id="@+id/lankomumas"/>
 
     <Button
@@ -24,4 +26,9 @@
         android:layout_below="@id/lankomumas"
         android:id="@+id/klausimas"/>
 
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/lankomumas"/>
 </RelativeLayout>
