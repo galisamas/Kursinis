@@ -18,9 +18,14 @@
     <string name="answerQuest">Atsakyti į klausimą</string>
     <string name="Answer">Atsakymas į klausimą</string>
     <string-array name="lectures_array">
-        <item>Paskaita 1</item>
-        <item>Paskaita 2</item>
-        <item>Paskaita 3</item>
+        <item>Geografinės informacinės sistemos</item>
+        <item>Prigramų sistemų inžinerija</item>
+        <item>Prigramų sistemų inžinerija 2</item>
+    </string-array>
+    <string-array name="lectures_code_array">
+        <item>MIFGIS</item>
+        <item>MIFPSI</item>
+        <item>MIFPSI2</item>
     </string-array>
     <string name="questionName">Paskaitos klausimas:\nKoks ..?\nKas ..?\nKaip ..?\nKodel ..?\nKada ..?\nIšverskite: \'
         An essay is, generally, a scholarly piece of writing that gives the author\'s own argument—but the definition is

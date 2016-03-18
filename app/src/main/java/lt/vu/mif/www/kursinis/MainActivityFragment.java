@@ -22,10 +22,14 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.util.Date;
+
 
 public class MainActivityFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     Button lank, klaus;
+    Spinner spinner;
+    String uniqueC;
 
     public MainActivityFragment() {
     }
@@ -38,25 +42,27 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         klaus = (Button) v.findViewById(R.id.klausimas);
         lank.setOnClickListener(this);
         klaus.setOnClickListener(this);
-        Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
+        klaus.setEnabled(false);
+        spinner = (Spinner) v.findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.lectures_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setOnItemSelectedListener(this);
         spinner.setAdapter(adapter);
+        uniqueC = UniqueCodeGenerator.generate(getActivity());
+        unlockQuestion();
         return v;
     }
 
     @Override
-    public void onClick(View v) { // TODO: kalusimui: https://parse.com/questions/updating-a-field-without-retrieving-the-object-first
-        // TODO Timer for callbacks: http://stackoverflow.com/questions/6439903/android-messaging-between-thread-in-a-class-and-activty
+    public void onClick(View v) {
 //        openFormActivity("dada");
         if( v.getId() == R.id.klausimas && isNetworkAvailable()){
             Intent intent = new Intent(getActivity(), QuestionActivity.class);
             startActivity(intent);
         }
         else if (v.getId() == R.id.lankomumas && isNetworkAvailable())
-            if (checkUniqueCode()) {
+            if (checkUniqueCode() == null) { // true
                 scanQR();
             } else {
                 Snackbar.make(v, getString(R.string.alreadyInClass), Snackbar.LENGTH_LONG).show();
@@ -90,15 +96,16 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         startActivity(intent);
     }
 
-    private boolean checkUniqueCode(){
-        String uniqueC = UniqueCodeGenerator.generate(getActivity());
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(Constants.table_name);
+    private ParseQuery<ParseObject> checkUniqueCode(){
+        String lectureCode = getResources().getStringArray(R.array.lectures_code_array)[spinner.getSelectedItemPosition()];
+        String parseTableName = lectureCode + "_" + Constants.dateMocked + Constants.table_pref_l;
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(parseTableName);
         query.whereEqualTo(Constants.unique_code, uniqueC);
         try {
             query.getFirst();
-            return false;
+            return query;
         } catch (ParseException e) {
-            return true;
+            return null;
         }
     }
 
@@ -112,11 +119,32 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        unlockQuestion();
+    }
 
+    private void unlockQuestion() {
+        String lectureCode = getResources().getStringArray(R.array.lectures_code_array)[spinner.getSelectedItemPosition()];
+        String parseTableName = lectureCode + "_" + Constants.dateMocked + Constants.table_pref_k;
+        try {
+            ParseQuery<ParseObject> queryTable = ParseQuery.getQuery(parseTableName);
+            queryTable.getFirst();
+            ParseQuery<ParseObject> queryStudent = checkUniqueCode();
+            if(queryStudent != null){
+                queryStudent.whereEqualTo(Constants.unique_code, uniqueC);
+                Date date = new Date();
+                long timeNow = date.getTime();
+                long timeThen = timeNow - (3600 * 1000);   // 20 minutes. Time is in milliseconds
+                Date queryDate = new Date();
+                queryDate.setTime(timeThen);
+                queryStudent.whereGreaterThanOrEqualTo(Constants.created_at, queryDate);
+                queryStudent.getFirst();
+                klaus.setEnabled(true);
+            }
+        } catch (ParseException e) {
+            System.out.println("There is no class with that name");
+        }
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
+    public void onNothingSelected(AdapterView<?> parent) {}
 }
